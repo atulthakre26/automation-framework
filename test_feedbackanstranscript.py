@@ -12,21 +12,19 @@ from selenium.webdriver.support import expected_conditions as EC
 def driver():
     options = Options()
     options.add_argument("--start-maximized")
-    service = Service()  # Optional: specify ChromeDriver path if needed
+    service = Service()  # You can specify chromedriver path here if needed
     driver = webdriver.Chrome(service=service, options=options)
 
     try:
-        # ✅ Step 1: Open login page
+        # ✅ Login
         driver.get("https://demo.aceint.ai/auth/signin")
         time.sleep(2)
         driver.save_screenshot("screenshots/before_login.png")
 
-        # ✅ Step 2: Fill login form
         driver.find_element(By.XPATH, "//input[@type='email']").send_keys("atulthakre511@gmail.com")
         driver.find_element(By.XPATH, "//input[@type='password']").send_keys("123456789")
         driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
-        # ✅ Step 3: Wait until URL changes (indicating successful login)
         WebDriverWait(driver, 20).until(
             EC.url_changes("https://demo.aceint.ai/auth/signin")
         )
@@ -46,7 +44,7 @@ def test_interview_summary_page(driver):
     wait = WebDriverWait(driver, 20)
     driver.save_screenshot("screenshots/summary_loaded.png")
 
-    # List of elements to verify
+    # ✅ Verify UI sections
     elements_to_check = [
         ("//*[contains(text(), 'Video Playback Restricted')]", "Video Restriction Message"),
         ("//*[contains(text(), 'Campus Readiness')]", "Campus Readiness Section"),
@@ -56,14 +54,43 @@ def test_interview_summary_page(driver):
         ("//*[contains(text(), 'Areas for Improvement')]", "Areas for Improvement Section"),
         ("//*[contains(text(), 'Concerning Aspects')]", "Concerning Aspects Section"),
         ("//*[contains(text(), 'Transcript')]", "Transcript Button"),
+
+        # ✅ Functionalities to check
+        ("//*[contains(text(), 'Chat')]", "Chat Section"),
+        ("//*[contains(text(), 'Recommendation')]", "Recommendation Section"),
+        ("//*[contains(text(), 'Skill gap')]", "Skill Gap Section"),
+        ("//*[contains(text(), 'Skill Assessment')]", "Skill Assessment Section"),
+        ("//*[contains(text(), 'Interview Analysis')]", "Interview Analysis Section"),
     ]
 
     for xpath, description in elements_to_check:
         try:
             wait.until(EC.visibility_of_element_located((By.XPATH, xpath)))
             print(f"✅ Found: {description}")
-        except Exception as e:
+        except Exception:
             driver.save_screenshot(f"screenshots/failed_{description.replace(' ', '_').lower()}.png")
             raise AssertionError(f"❌ Failed to find: {description}")
 
-    driver.save_screenshot("screenshots/interview_summary_passed.png") 
+    driver.save_screenshot("screenshots/interview_summary_passed.png")
+
+    # ✅ Interact with Chat
+    try:
+        chat_box = wait.until(EC.presence_of_element_located(
+            (By.XPATH, "//textarea[@placeholder='Type your message here...']")
+        ))
+        chat_box.send_keys("What is my weakness?")
+        send_button = driver.find_element(By.XPATH, "//button[contains(.,'Send')]")
+        send_button.click()
+        print("✅ Chat message sent successfully")
+
+        # Wait for response (look for some generic chat reply)
+        wait.until(EC.presence_of_element_located(
+            (By.XPATH, "//div[contains(@class,'chat-message')]")
+        ))
+        print("✅ Chat response received")
+        driver.save_screenshot("screenshots/chat_response.png")
+
+    except Exception as e:
+        driver.save_screenshot("screenshots/chat_failed.png")
+        print("⚠️ Chat interaction failed")
+
