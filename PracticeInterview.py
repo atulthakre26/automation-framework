@@ -19,43 +19,43 @@ class AiInterviewTest(unittest.TestCase):
         # --- Login ---
         
         driver.find_element(By.XPATH, "//input[@type='email']").send_keys("atulthakre511@gmail.com")
-        driver.find_element(By.XPATH, "//input[@type='password']").send_keys("f2QIlOIS0KbE")
+        driver.find_element(By.XPATH, "//input[@type='password']").send_keys("123456789")
         driver.find_element(By.XPATH, "//button[contains(text(),'Sign In')]").click()
         time.sleep(3)
         
 
         # --- Click on Technical Interview  ---
-        driver.find_element(By.XPATH, "/html/body/div/div[2]/div/main/main/div/div/section[1]/div[2]/div[1]").click()
+        driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/main/div/button").click()
         time.sleep(2)
 
         # --- Select Job Role ---   /html/body/div[3]/div/form/label[1]/button
-        driver.find_element(By.XPATH, "/html/body/div[3]/div/form/label[1]/select/option[2]").click()
+        driver.find_element(By.XPATH, "/html/body/div[3]/div/div[2]/div/form/div[1]/div/div[1]/label[1]/select/option[3]").click()
 
         # --- Select Interview Type ---
         time.sleep(1)
-        driver.find_element(By.XPATH, "/html/body/div[3]/div/form/label[2]/select/option[2]").click()
+        driver.find_element(By.XPATH, "/html/body/div[3]/div/div[2]/div/form/div[1]/div/div[1]/label[2]/select/option[3]").click()
 
         # --- Select Duration ---
         time.sleep(1)
-        driver.find_element(By.XPATH, "/html/body/div[3]/div/form/label[3]/select/option[2]").click()
+        driver.find_element(By.XPATH, "/html/body/div[3]/div/div[2]/div/form/div[1]/div/div[2]/label[1]/select/option[2]").click()
 
         # --- Select Difficulty ---
         time.sleep(1)
-        driver.find_element(By.XPATH, "/html/body/div[3]/div/form/label[4]/select/option[3]").click()
+        driver.find_element(By.XPATH, "/html/body/div[3]/div/div[2]/div/form/div[1]/div/div[2]/label[2]/select/option[2]").click()
        # time.sleep(3)
 
         # --- Enter Technical Skill ---
-        skill_input = driver.find_element(By.XPATH, "/html/body/div[3]/div/form/label[5]/div/div/input")
+        skill_input = driver.find_element(By.XPATH, "/html/body/div[3]/div/div[2]/div/form/div[1]/div/div[3]/label/div/input")
         skill_input.send_keys("Java")
         skill_input.send_keys(Keys.ENTER)
         time.sleep(1)
 
         # --- Agree to Terms ---
-        driver.find_element(By.XPATH, "/html/body/div[3]/div/form/label[6]/button").click()
+        driver.find_element(By.XPATH, "/html/body/div[3]/div/div[2]/div/form/div[2]/div/div[1]/label/button").click()
         time.sleep(1)
 
         # --- Start Interview ---
-        driver.find_element(By.XPATH, "/html/body/div[3]/div/form/button").click()
+        driver.find_element(By.XPATH, "/html/body/div[3]/div/div[2]/div/form/div[2]/div/div[2]/button").click()
 
         # --- Wait for redirection ---
         time.sleep(30)

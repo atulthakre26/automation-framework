@@ -56,22 +56,26 @@ def test_feedback_modal(driver):
         textarea = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[3]/textarea")))
         textarea.send_keys("Amazing platform. Helps with mock interviews effectively.")
         print("✅ Feedback entered")
+        time.sleep(2)
 
-        # ✅ Give Rating (click 4th star)
-        stars = driver.find_elements(By.XPATH, "/html/body/div[3]/div[3]/button[4]/svg")
+        print("🔹 Selecting rating")
+        stars = driver.find_elements(By.XPATH, "//button[@aria-label[contains(., 'Star')]]")
         if len(stars) >= 4:
             stars[3].click()
-            print("✅ Rating given")
+            print("✅ 4th star clicked")
         else:
             raise Exception("❌ Rating stars not found")
 
         driver.save_screenshot("screenshots/feedback_filled.png")
 
-        # ✅ Click Send
-        send_btn = driver.find_element(By.XPATH, "/html/body/div[3]/div[4]/button")
+        print("🔹 Clicking Send button")
+        send_btn = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Send')]"))
+        )
         send_btn.click()
         print("✅ Feedback submitted")
         driver.save_screenshot("screenshots/feedback_sent.png")
+
 
     except Exception as e:
         driver.save_screenshot("screenshots/feedback_failed.png")
