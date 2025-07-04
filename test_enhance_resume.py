@@ -11,6 +11,12 @@ from selenium.webdriver.support import expected_conditions as EC
 def get_resume_path():
     return os.path.abspath(r"C:\Users\HP\Downloads\AtulResume.pdf")
 
+def get_word_path():
+    return os.path.abspath(r"C:\Users\HP\Downloads\Prerequisites_.docx_of_concentrix_process[1].docx")
+
+def get_zip_path():
+    return os.path.abspath(r"C:\Users\HP\Downloads\security.zip")
+
 # Reusable fixture for login and setup
 @pytest.fixture
 def driver():
@@ -36,7 +42,7 @@ def driver():
     driver.quit()
 
 # ✅ Test: Full resume upload
-def test_full_resume_upload_flow(driver):
+def test_pdf_resume_file(driver):
     driver.get("https://demo.aceint.ai/resume")
 
     # Click Enhance Resume popup card to open modal
@@ -59,20 +65,21 @@ def test_full_resume_upload_flow(driver):
             break
 
     # Select Experience
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[contains(.,'Choose experience')]"))
-    ).click()
+    # WebDriverWait(driver, 5).until(
+    #     EC.element_to_be_clickable((By.XPATH, "//button[contains(.,'Choose experience')]"))
+    # ).click()
 
-    for option in driver.find_elements(By.XPATH, "//div[@role='option']"):
-        if "0-1 year" in option.text:
-            option.click()
-            break
+    # for option in driver.find_elements(By.XPATH, "//div[@role='option']"):
+    #     if "0-1 year" in option.text:
+    #         option.click()
+    #         break
 
     # Upload resume
     upload_input = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@type='file']"))
     )
     upload_input.send_keys(get_resume_path())
+    time.sleep(15)
 
     # Click Proceed
     proceed_btn = WebDriverWait(driver, 10).until(
@@ -81,6 +88,85 @@ def test_full_resume_upload_flow(driver):
     proceed_btn.click()
 
     # Wait for upload result
-    time.sleep(3)
+    time.sleep(2)
     page_text = driver.page_source.lower()
     assert "uploaded" in page_text or "success" in page_text
+
+
+def test_word_file(driver):
+    driver.get("https://demo.aceint.ai/resume")
+
+    # Click Enhance Resume popup card to open modal
+    WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "/html/body/div/div[2]/div/main/div/div/main/div[2]/div[1]/div/div/div/div/div"))
+    ).click()
+
+    # Select Job Role
+    WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[contains(.,'Choose job role')]"))
+    ).click()
+
+    WebDriverWait(driver, 5).until(
+        EC.presence_of_all_elements_located((By.XPATH, "//div[@role='option']"))
+    )
+
+    for option in driver.find_elements(By.XPATH, "//div[@role='option']"):
+        if "Associate Software Engineer" in option.text:
+            option.click()
+            break
+
+    # Upload resume
+    upload_input = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//input[@type='file']"))
+    )
+    upload_input.send_keys(get_word_path())
+    time.sleep(3)
+
+    # Click Proceed
+    proceed_btn = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "/html/body/div[3]/button[1]"))
+    )
+    proceed_btn.click()
+
+    # Wait for upload result
+    time.sleep(5)
+    page_text = driver.page_source.lower()
+    assert "uploaded" in page_text or "success" in page_text
+
+def test_zip_file(driver):
+    driver.get("https://demo.aceint.ai/resume")
+
+    WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH,"/html/body/div/div[2]/div/main/div/div/main/div[2]/div[1]/div/div/div/div/div"))
+    ).click()
+
+    WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH,"//button[contains(.,'Choose job role')]"))
+    ).click()
+
+    WebDriverWait(driver, 5).until(
+        EC.element_to_be_clickable((By.XPATH,"//div[@role='option']"))
+    )
+
+    for option in driver.find_elements(By.XPATH, "//div[@role='option']"):
+       if "Associate Software Engineer" in option.text:  
+         option.click()
+         break
+
+
+    upload_input = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH,"//input[@type='file']"))
+    )
+
+    upload_input.send_keys(get_zip_path())
+    time.sleep(5)
+
+    proceed_btn = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH,"/html/body/div[3]/button[1]"))
+    )
+
+    proceed_btn.click()
+
+    time.sleep(3)
+
+    page_text = driver.page_source.lower()
