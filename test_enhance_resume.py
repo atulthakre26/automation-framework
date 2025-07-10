@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # Helper to return full path of resume
-def get_resume_path():
+def get_pdf_path():
     return os.path.abspath(r"C:\Users\HP\Downloads\AtulResume.pdf")
 
 def get_word_path():
@@ -84,7 +84,7 @@ def test_pdf_resume_file(driver):
     upload_input = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@type='file']"))
     )
-    upload_input.send_keys(get_resume_path())
+    upload_input.send_keys(get_pdf_path())
     time.sleep(15)
 
     # Click Proceed
